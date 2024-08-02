@@ -1,0 +1,418 @@
+import pandas as pd
+
+path="/content/input_scale.csv"
+df=pd.read_csv(path)
+path="//content/target_scale.csv"
+df=pd.read_csv(path)
+
+(1)
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+# Load input features and target variable with relative file paths
+input_data = pd.read_csv('/content/input_scale.csv')
+target_data = pd.read_csv('/content/target_scale.csv')
+
+# Assuming 'target_column' is the name of the target variable column
+X = input_data
+y = target_data['oxidation']
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a Random Forest Regressor model
+rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
+
+# Train the model
+rf_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = rf_model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results (optional)
+plt.scatter(y_test, y_pred)
+plt.xlabel('True Values')
+plt.ylabel('Predictions')
+plt.show()
+(2)
+# Import necessary libraries
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import AdaBoostRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(100, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a Decision Tree Regressor as the base learner
+base_model = DecisionTreeRegressor(max_depth=3)
+
+# Create and fit the AdaBoost regression model
+adaboost_model = AdaBoostRegressor(base_model, n_estimators=50, learning_rate=0.1, random_state=42)
+adaboost_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = adaboost_model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title('AdaBoost Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+# Save the data to a CSV file
+df_data = pd.DataFrame({'True Values': y_test, 'Predictions': y_pred})
+df_data.to_csv('predicted_data.csv', index=False)
+(3)
+# Install TensorFlow using: pip install tensorflow
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import SimpleRNN, Dense
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(100, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Reshape the data for RNN input (samples, time steps, features)
+X_train_rnn = X_train.reshape((X_train.shape[0], 1, X_train.shape[1]))
+X_test_rnn = X_test.reshape((X_test.shape[0], 1, X_test.shape[1]))
+
+# Create a simple RNN model
+model = Sequential([
+    SimpleRNN(10, activation='relu', input_shape=(1, 1)),
+    Dense(1, activation='linear')
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Train the model
+history = model.fit(X_train_rnn, y_train, epochs=100, batch_size=16, validation_data=(X_test_rnn, y_test), verbose=0)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test_rnn)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title('RNN Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+import pandas as pd
+
+# Assuming y_test and y_pred are arrays with the shape (n_samples,)
+# If they are 2D arrays, you can flatten them using .ravel() or .flatten()
+y_test_flat = y_test.ravel()  # or y_test.flatten()
+y_pred_flat = y_pred.ravel()  # or y_pred.flatten()
+
+# Create a DataFrame with flattened arrays
+df_data = pd.DataFrame({'True Values': y_test_flat, 'Predictions': y_pred_flat})
+
+# Save the DataFrame to a CSV file
+df_data.to_csv('predicted_data.csv', index=False)
+(4)
+# Install TensorFlow using: pip install tensorflow
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(100, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a simple DNN model
+model = Sequential([
+    Dense(20, activation='relu', input_dim=1),
+    Dense(10, activation='relu'),
+    Dense(1, activation='linear')
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=100, batch_size=16, validation_data=(X_test, y_test), verbose=0)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title('DNN Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+# Assuming y_test and y_pred are arrays with the shape (n_samples,)
+# If they are 2D arrays, you can flatten them using .ravel() or .flatten()
+y_test_flat = y_test.ravel()  # or y_test.flatten()
+y_pred_flat = y_pred.ravel()  # or y_pred.flatten()
+
+# Create a DataFrame with flattened arrays
+df_data = pd.DataFrame({'True Values': y_test_flat, 'Predictions': y_pred_flat})
+
+# Save the DataFrame to a CSV file
+df_data.to_csv('predicted_data.csv', index=False)
+(5)
+
+# Import necessary libraries
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(100, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and fit the Decision Tree regression model
+decision_tree_model = DecisionTreeRegressor(max_depth=3, random_state=42)
+decision_tree_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = decision_tree_model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title('Decision Tree Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+# Assuming y_test and y_pred are arrays with the shape (n_samples,)
+# If they are 2D arrays, you can flatten them using .ravel() or .flatten()
+y_test_flat = y_test.ravel()  # or y_test.flatten()
+y_pred_flat = y_pred.ravel()  # or y_pred.flatten()
+
+# Create a DataFrame with flattened arrays
+df_data = pd.DataFrame({'True Values': y_test_flat, 'Predictions': y_pred_flat})
+
+# Save the DataFrame to a CSV file
+df_data.to_csv('predicted_data.csv', index=False)
+(6)
+# Install TensorFlow using: pip install tensorflow
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(100, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a simple ANN model
+model = Sequential([
+    Dense(10, input_dim=1, activation='relu'),
+    Dense(1, activation='linear')
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='mean_squared_error')
+
+# Train the model
+history = model.fit(X_train, y_train, epochs=100, batch_size=16, validation_data=(X_test, y_test), verbose=0)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title('ANN Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+# Assuming y_test and y_pred are arrays with the shape (n_samples,)
+# If they are 2D arrays, you can flatten them using .ravel() or .flatten()
+y_test_flat = y_test.ravel()  # or y_test.flatten()
+y_pred_flat = y_pred.ravel()  # or y_pred.flatten()
+
+# Create a DataFrame with flattened arrays
+df_data = pd.DataFrame({'True Values': y_test_flat, 'Predictions': y_pred_flat})
+
+# Save the DataFrame to a CSV file
+df_data.to_csv('predicted_data.csv', index=False)
+(7)
+
+# Import necessary libraries
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(80, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Choose the number of neighbors (K)
+k_neighbors = 5
+
+# Create and fit the KNN regression model
+knn_model = KNeighborsRegressor(n_neighbors=k_neighbors)
+knn_model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = knn_model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title(f'KNN Regression (K={k_neighbors})')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
+
+# Assuming y_test and y_pred are arrays with the shape (n_samples,)
+# If they are 2D arrays, you can flatten them using .ravel() or .flatten()
+y_test_flat = y_test.ravel()  # or y_test.flatten()
+y_pred_flat = y_pred.ravel()  # or y_pred.flatten()
+
+# Create a DataFrame with flattened arrays
+df_data = pd.DataFrame({'True Values': y_test_flat, 'Predictions': y_pred_flat})
+
+# Save the DataFrame to a CSV file
+
+(8)
+# Install CatBoost using: pip install catboost
+import catboost
+from catboost import CatBoostRegressor
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Generate some example data
+np.random.seed(42)
+X = np.sort(5 * np.random.rand(100, 1), axis=0)
+y = np.sin(X).ravel() + np.random.normal(0, 0.1, X.shape[0])
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and fit the CatBoost regression model
+catboost_model = CatBoostRegressor(iterations=100, depth=5, learning_rate=0.1, loss_function='RMSE', random_seed=42)
+catboost_model.fit(X_train, y_train, eval_set=(X_test, y_test), verbose=False)
+
+# Make predictions on the test set
+y_pred = catboost_model.predict(X_test)
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')
+
+# Visualize the results
+plt.scatter(X_test, y_test, color='black', label='True values')
+plt.scatter(X_test, y_pred, color='blue', label='Predicted values')
+plt.title('CatBoost Regression')
+plt.xlabel('X')
+plt.ylabel('y')
+plt.legend()
+plt.show()
